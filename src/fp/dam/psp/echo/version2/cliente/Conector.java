@@ -33,6 +33,7 @@ public class Conector extends JPanel {
 			dir.setEditable(false);
 			// TODO completar proceso de conexión habilitando el botón de enviar en el frame
 			
+			frame.conexionOn();
 		}
 		else {
 			src.setText("Conectar");
@@ -40,6 +41,7 @@ public class Conector extends JPanel {
 			dir.setEditable(true);
 			// TODO completar proceso de desconexión deshabilitando el botón de enviar en el frame
 			
+			frame.conexionOff();
 		}
 	}
 	
