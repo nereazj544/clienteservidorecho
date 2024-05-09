@@ -1,4 +1,4 @@
-package fp.dam.psp.echo.version2.cliente;
+package fp.dam.psp.echo.v3.cliente;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -71,8 +71,8 @@ public class Main extends JFrame {
 		texto.requestFocus();
 	}
 	
-	public void mostrarEcho(String echo) {
-		this.echo.append(echo);
+	public JTextArea getEcho() {
+		return echo;
 	}
 	
 	private void iniciar() {

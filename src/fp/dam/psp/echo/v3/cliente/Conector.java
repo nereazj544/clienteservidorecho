@@ -1,9 +1,11 @@
-package fp.dam.psp.echo.version2.cliente;
+package fp.dam.psp.echo.v3.cliente;
 
 import java.awt.event.ActionEvent;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -12,7 +14,9 @@ public class Conector extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	private Main frame;
-	JTextField dir = new JTextField();
+	private JTextField dir = new JTextField("localhost");
+	private Socket socket;
+	private DataOutputStream out;
 
 	public Conector(Main frame) {
 		this.frame = frame;
@@ -25,28 +29,56 @@ public class Conector extends JPanel {
 		add(con);
 	}
 	
+	private Thread t;
 	private void conectarDesconectar(ActionEvent cmd) {
 		JButton src = (JButton) cmd.getSource();
 		if (cmd.getActionCommand().equals("conectar")) {
 			src.setText("Desconectar");
 			src.setActionCommand("desconectar");
 			dir.setEditable(false);
-			// TODO completar proceso de conexión habilitando el botón de enviar en el frame
-			
+			try {
+				socket = new Socket(dir.getText(), 5000);
+				t = new Receptor(socket, frame.getEcho());
+				out = new DataOutputStream(socket.getOutputStream());
+				t.start();
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			frame.conexionOn();
 		}
 		else {
 			src.setText("Conectar");
 			src.setActionCommand("conectar");
 			dir.setEditable(true);
-			// TODO completar proceso de desconexión deshabilitando el botón de enviar en el frame
-			
+			try {
+				socket.shutdownOutput();
+				t.join();
+			} catch (IOException | InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			out = null;
 			frame.conexionOff();
 		}
 	}
 	
 	
-	public void enviar(String texto) {
+	public boolean enviar(String texto) {
+		if (out != null) {
+			try {
+				out.writeUTF(texto);
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 		
 	}
 	

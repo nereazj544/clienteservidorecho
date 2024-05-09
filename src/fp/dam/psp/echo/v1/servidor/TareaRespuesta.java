@@ -1,4 +1,4 @@
-package fp.dam.psp.echo.dataio.servidor;
+package fp.dam.psp.echo.v1.servidor;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

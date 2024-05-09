@@ -1,4 +1,4 @@
-package fp.dam.psp.echo.readerwriter.cliente;
+package fp.dam.psp.echo.v2.cliente;
 
 import java.io.BufferedReader;
 import java.io.IOException;

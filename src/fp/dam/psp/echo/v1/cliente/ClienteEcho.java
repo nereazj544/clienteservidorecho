@@ -1,4 +1,4 @@
-package fp.dam.psp.echo.dataio.cliente;
+package fp.dam.psp.echo.v1.cliente;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
