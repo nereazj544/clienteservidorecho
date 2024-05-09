@@ -17,12 +17,16 @@ public class Almacen {
 	}
 	
 	public synchronized String retirar() {
-		while (almacen.isEmpty())
-			try {
-				wait();
-			} catch (InterruptedException e) {}
-		String s = almacen.poll();
-		notify();
-		return s;
+		try {
+			while (almacen.isEmpty())
+			wait();
+			String s = almacen.poll();
+			notify();
+			return s;
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			return null;
+		}
+		
 	}
 }

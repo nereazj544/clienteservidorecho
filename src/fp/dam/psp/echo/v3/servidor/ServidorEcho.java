@@ -13,7 +13,7 @@ public class ServidorEcho {
 	
 	public static void main(String[] args) throws IOException {
 		ServerSocket serverSocket = new ServerSocket(5000);
-		ExecutorService executor = Executors.newFixedThreadPool(1000);
+		ExecutorService executor = Executors.newFixedThreadPool(2);
 		System.out.println("Servidor ECHO escuchando en puerto 5000");
 		while (true) {
 			Socket socket = serverSocket.accept();

@@ -9,15 +9,17 @@ public class Receptor implements Runnable {
 	
 	private Socket socket;
 	private Almacen almacen;
+	private int id;
 	
-	public Receptor(Socket socket, Almacen almacen) {
+	public Receptor(Socket socket, Almacen almacen, int id) {
 		this.socket = socket;
 		this.almacen = almacen;
+		this.id = id;
 	}
 	
 	@Override
 	public void run() {
-		Thread.currentThread().setName(socket.getInetAddress() + " (RECEPTOR)");
+		Thread.currentThread().setName(socket.getInetAddress() + " (RECEPTOR " + id + ")");
 		try {
 			DataInputStream in = new DataInputStream(socket.getInputStream());
 			String s;
