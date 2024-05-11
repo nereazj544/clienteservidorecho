@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class Conector extends JPanel {
-	
+
 	private static final long serialVersionUID = 1L;
 	private Main frame;
 	private JTextField dir = new JTextField("localhost");
@@ -28,8 +28,9 @@ public class Conector extends JPanel {
 		con.addActionListener(this::conectarDesconectar);
 		add(con);
 	}
-	
+
 	private Thread t;
+
 	private void conectarDesconectar(ActionEvent cmd) {
 		JButton src = (JButton) cmd.getSource();
 		if (cmd.getActionCommand().equals("conectar")) {
@@ -41,16 +42,22 @@ public class Conector extends JPanel {
 				t = new Receptor(socket, frame.getEcho());
 				out = new DataOutputStream(socket.getOutputStream());
 				t.start();
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			frame.conexionOn();
-		}
-		else {
+		} else {
 			src.setText("Conectar");
 			src.setActionCommand("conectar");
 			dir.setEditable(true);
+			desconectar();
+			frame.conexionOff();
+		}
+	}
+
+	public void desconectar() {
+		if (out != null) {
 			try {
 				socket.shutdownOutput();
 				t.join();
@@ -64,13 +71,12 @@ public class Conector extends JPanel {
 				}
 			}
 			out = null;
-			frame.conexionOff();
+			System.out.println("CONEXIÓN FINALIZADA");
 		}
 	}
-	
-	
+
 	public boolean enviar(String texto) {
-		if (out != null) {
+		if (out != null && texto.length() > 0) {
 			try {
 				out.writeUTF(texto);
 				return true;
@@ -79,7 +85,6 @@ public class Conector extends JPanel {
 			}
 		}
 		return false;
-		
 	}
-	
+
 }

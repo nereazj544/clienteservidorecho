@@ -19,7 +19,7 @@ public class Almacen {
 	public synchronized String retirar() {
 		try {
 			while (almacen.isEmpty())
-			wait();
+				wait();
 			String s = almacen.poll();
 			notify();
 			return s;
@@ -27,6 +27,5 @@ public class Almacen {
 			Thread.currentThread().interrupt();
 			return null;
 		}
-		
 	}
 }

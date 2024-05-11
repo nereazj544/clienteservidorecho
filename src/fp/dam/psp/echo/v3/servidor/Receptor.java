@@ -4,22 +4,24 @@ import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class Receptor implements Runnable {
-	
+
 	private Socket socket;
 	private Almacen almacen;
-	private int id;
-	
-	public Receptor(Socket socket, Almacen almacen, int id) {
+	private Future<?> emisor;
+
+	public Receptor(Socket socket, Almacen almacen, ExecutorService executor) {
 		this.socket = socket;
 		this.almacen = almacen;
-		this.id = id;
+		emisor = executor.submit(new Emisor(socket, almacen));
 	}
-	
+
 	@Override
 	public void run() {
-		Thread.currentThread().setName(socket.getInetAddress() + " (RECEPTOR " + id + ")");
 		try {
 			DataInputStream in = new DataInputStream(socket.getInputStream());
 			String s;
@@ -32,6 +34,20 @@ public class Receptor implements Runnable {
 			System.out.println(socket.getInetAddress() + ": EOF");
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			emisor.cancel(true);
+			if (!emisor.isDone())
+				try {System.out.println(socket.getInetAddress() + ": CONEXIÓN FINALIZADA");
+					emisor.get();
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+				}
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println(socket.getInetAddress() + ": CONEXIÓN FINALIZADA");
 		}
 	}
 

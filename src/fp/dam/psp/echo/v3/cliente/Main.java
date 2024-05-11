@@ -3,6 +3,8 @@ package fp.dam.psp.echo.v3.cliente;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -10,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
 public class Main extends JFrame {
@@ -27,7 +28,7 @@ public class Main extends JFrame {
 
 	public Main() {
 		super("Cliente ECHO");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		add(con, BorderLayout.NORTH);
 		
 		texto.setColumns(80);
@@ -46,6 +47,15 @@ public class Main extends JFrame {
 		enviar.setEnabled(false);
 		enviar.addActionListener(this::enviar);
 		add(enviar, BorderLayout.SOUTH);
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				con.desconectar();
+				System.exit(0);
+			}
+		});
+		
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -62,6 +72,7 @@ public class Main extends JFrame {
 		texto.setEditable(false);
 		texto.setBorder(borde1);
 		echo.setBorder(borde1);
+		echo.setText("");
 		enviar.setEnabled(false);
 	}
 	

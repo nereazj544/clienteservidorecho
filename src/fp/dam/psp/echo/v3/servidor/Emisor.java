@@ -8,17 +8,14 @@ public class Emisor implements Runnable {
 
 	private Socket socket;
 	private Almacen almacen;
-	private int id;
 
-	public Emisor(Socket socket, Almacen almacen, int id) {
+	public Emisor(Socket socket, Almacen almacen) {
 		this.socket = socket;
 		this.almacen = almacen;
-		this.id = id;
 	}
 
 	@Override
 	public void run() {
-		Thread.currentThread().setName(socket.getInetAddress() + " (EMISOR " + id + ")");
 		try {
 			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 			while (!Thread.currentThread().isInterrupted()) {
